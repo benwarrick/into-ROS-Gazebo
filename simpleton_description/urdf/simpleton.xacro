@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+
+<robot name="simpleton" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<xacro:include filename="$(find simpleton_description)/urdf/simpleton.gazebo" />
+	<xacro:include filename="$(find simpleton_description)/urdf/macros.xacro" />
+
+	<xacro:property name="wheelThickness" value="0.1"/>
+	<xacro:property name="wheelRadius" value="0.1"/>
+
+	<xacro:property name="chassisWidth" value="0.3"/>
+	<xacro:property name="chassisHeight" value="0.1"/>
+	<xacro:property name="chassisLength" value="0.5"/>
+	<xacro:property name="casterRadius" value="0.05"/>
+	<xacro:property name="cameraSize" value="0.05"/>
+
+	<!-- Base link --> 
+	<link name="footprint" />
+
+	<!-- Chassis --> 
+  <joint name="base_joint" type="fixed">
+    <parent link="footprint"/>
+    <child link="chassis"/>
+  </joint>
+
+  <link name="chassis">
+    <collision>
+      <origin xyz="0 0 ${wheelRadius+(chassisHeight/2)}" rpy="0 0 0"/>
+      <geometry>
+			<box size="${chassisLength} ${chassisWidth} ${chassisHeight}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 ${wheelRadius+(chassisHeight/2)}" rpy="0 0 0"/>
+      <geometry>
+			<box size="${chassisLength} ${chassisWidth} ${chassisHeight}"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+
+		<inertial>
+		  <mass value="1"/>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+		  <box_inertia m="0.5" x="${chassisLength}" y="${chassisWidth}" z="${chassisHeight}"/>
+		</inertial>
+  </link>
+
+	<wheel lr="left" y="-1"/>
+	<wheel lr="right" y="1"/>
+
+	<!-- Caster Wheel --> 
+  <joint name="fixed" type="fixed">
+    <parent link="chassis"/>
+    <child link="caster_wheel"/>
+  </joint>
+
+  <link name="caster_wheel">
+
+    <collision>
+      <origin xyz="${casterRadius-chassisLength/2} 0 ${casterRadius-chassisHeight+wheelRadius}" rpy="0 0 0"/>
+      <geometry>
+	<sphere radius="${casterRadius}"/>
+      </geometry>
+    </collision>
+  
+    <visual> 
+      <origin xyz="${casterRadius-chassisLength/2} 0 ${casterRadius-chassisHeight+wheelRadius}" rpy="0 0 0"/>
+      <geometry>
+	<sphere radius="${casterRadius}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="${casterRadius-chassisLength/2} 0 ${casterRadius-chassisHeight+wheelRadius}" rpy="0 0 0"/>
+      <mass value="0.5"/>
+      <sphere_inertia m="0.5" r="${casterRadius}"/>
+    </inertial>
+  </link>
+
+	<!-- Camera -->
+	<!-- You can adjust the camera angle with the p in rpy, measured in radians. -->
+	<!-- You can also increate the height of the camera by adding a number, in meters, -->
+	<!-- to the z in xyz. For example, to simulate a camera mounted on a 1/2 meter post, -->
+	<!-- we can replace the z value with ${wheelRadius+chassisHeight+0.5}   							--> 
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="${chassisLength/2} 0 ${wheelRadius+chassisHeight}" rpy="0 .2 0"/>
+    <parent link="chassis"/>
+    <child link="camera"/>
+  </joint>
+
+  <link name="camera">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${cameraSize} ${cameraSize} ${cameraSize}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${cameraSize} ${cameraSize} ${cameraSize}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+
+    <inertial>
+      <mass value="0.05" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <box_inertia m="0.05" x="${cameraSize}" y="${cameraSize}" z="${cameraSize}" />
+    </inertial>
+  </link>
+
+</robot> 
