@@ -1,2 +1,2 @@
 # intro-ROS-Gazebo
-This is the code and robot definitions for the guide I'm writing for getting a quick and effective start in self driving car algorithm development using ROS and Gazebo. 
+Code and URDF (robot/vehicle) definitions for Gazbo Simulator used in my Introduction to ROS Guide -- A Quick Start Guide for Self-Driving Car Algorithm Research.  
